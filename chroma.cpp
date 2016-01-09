@@ -11,6 +11,11 @@ typedef RZRESULT (*INIT)(void);
 typedef RZRESULT (*CREATEKEYBOARDEFFECT)(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM pParam, RZEFFECTID *pEffectId);
 typedef RZRESULT (*SETEFFECT)(RZEFFECTID EffectId);
 
+HMODULE chromaSDKModule;
+INIT Init;
+CREATEKEYBOARDEFFECT CreateKeyboardEffect;
+SETEFFECT SetEffect;
+
 #define RANDOM_BYTE()		(rand() % 255)
 #define NORMAL_COLOR    RGB(0, 82, 82)
 #define INSERT_COLOR    RGB(120, 159, 0)
@@ -27,15 +32,6 @@ fill_effect_with_color(ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE &Effect, COLORREF
 
 static PyObject *
 chroma_insertmode(PyObject *self, PyObject *args) {
-  // Load the chroma SDK and get the address of needed functions
-	HMODULE chromaSDKModule = LoadLibrary(_T("RzChromaSDK.dll"));
-	INIT Init = (INIT)GetProcAddress(chromaSDKModule, "Init");
-	CREATEKEYBOARDEFFECT CreateKeyboardEffect = (CREATEKEYBOARDEFFECT)GetProcAddress(chromaSDKModule, "CreateKeyboardEffect");
-	SETEFFECT SetEffect = (SETEFFECT)GetProcAddress(chromaSDKModule, "SetEffect");
-
-	// Initialize the driver
-	RZRESULT result = Init();
-
 	ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE Effect = {};
   fill_effect_with_color(Effect, INSERT_COLOR);
 	Effect.Color[HIBYTE(ChromaSDK::Keyboard::RZKEY_ESC)][LOBYTE(ChromaSDK::Keyboard::RZKEY_ESC)] = NORMAL_COLOR;
@@ -47,15 +43,6 @@ chroma_insertmode(PyObject *self, PyObject *args) {
 
 static PyObject *
 chroma_normalmode(PyObject *self, PyObject *args) {
-  // Load the chroma SDK and get the address of needed functions
-	HMODULE chromaSDKModule = LoadLibrary(_T("RzChromaSDK.dll"));
-	INIT Init = (INIT)GetProcAddress(chromaSDKModule, "Init");
-	CREATEKEYBOARDEFFECT CreateKeyboardEffect = (CREATEKEYBOARDEFFECT)GetProcAddress(chromaSDKModule, "CreateKeyboardEffect");
-	SETEFFECT SetEffect = (SETEFFECT)GetProcAddress(chromaSDKModule, "SetEffect");
-
-	// Initialize the driver
-	RZRESULT result = Init();
-
 	ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE Effect = {};
   fill_effect_with_color(Effect, NORMAL_COLOR);
 	Effect.Color[HIBYTE(ChromaSDK::Keyboard::RZKEY_I)][LOBYTE(ChromaSDK::Keyboard::RZKEY_I)] = INSERT_COLOR;
@@ -86,5 +73,14 @@ static struct PyModuleDef chromamodule = {
 PyMODINIT_FUNC
 PyInit_chroma(void)
 {
+  // Load the chroma SDK and get the address of needed functions
+	chromaSDKModule = LoadLibrary(_T("RzChromaSDK.dll"));
+	Init = (INIT)GetProcAddress(chromaSDKModule, "Init");
+	CreateKeyboardEffect = (CREATEKEYBOARDEFFECT)GetProcAddress(chromaSDKModule, "CreateKeyboardEffect");
+	SetEffect = (SETEFFECT)GetProcAddress(chromaSDKModule, "SetEffect");
+
+	// Initialize the driver
+	Init();
+
 	return PyModule_Create(&chromamodule);
 }
