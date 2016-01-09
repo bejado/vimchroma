@@ -19,10 +19,9 @@ SETEFFECT SetEffect;
 #define RANDOM_BYTE()		(rand() % 255)
 #define NORMAL_COLOR    RGB(0, 82, 82)
 #define INSERT_COLOR    RGB(120, 159, 0)
-#define VISUAL_COLOR    RGB(120, 159, 0)
 
 void
-fill_effect_with_color(ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE &Effect, COLORREF color) {
+FillEffectWithColor(ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE &Effect, COLORREF color) {
 	for (UINT row = 0; row < ChromaSDK::Keyboard::MAX_ROW; row++) {
 		for (UINT col = 0; col < ChromaSDK::Keyboard::MAX_COLUMN; col++) {
 			Effect.Color[row][col] = color;
@@ -33,7 +32,7 @@ fill_effect_with_color(ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE &Effect, COLORREF
 static PyObject *
 chroma_insertmode(PyObject *self, PyObject *args) {
 	ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE Effect = {};
-  fill_effect_with_color(Effect, INSERT_COLOR);
+  FillEffectWithColor(Effect, INSERT_COLOR);
 	Effect.Color[HIBYTE(ChromaSDK::Keyboard::RZKEY_ESC)][LOBYTE(ChromaSDK::Keyboard::RZKEY_ESC)] = NORMAL_COLOR;
 
   RZRESULT effectResult = CreateKeyboardEffect(ChromaSDK::Keyboard::CHROMA_CUSTOM, &Effect, NULL);
@@ -44,7 +43,7 @@ chroma_insertmode(PyObject *self, PyObject *args) {
 static PyObject *
 chroma_normalmode(PyObject *self, PyObject *args) {
 	ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE Effect = {};
-  fill_effect_with_color(Effect, NORMAL_COLOR);
+  FillEffectWithColor(Effect, NORMAL_COLOR);
 	Effect.Color[HIBYTE(ChromaSDK::Keyboard::RZKEY_I)][LOBYTE(ChromaSDK::Keyboard::RZKEY_I)] = INSERT_COLOR;
 
   RZRESULT effectResult = CreateKeyboardEffect(ChromaSDK::Keyboard::CHROMA_CUSTOM, &Effect, NULL);
