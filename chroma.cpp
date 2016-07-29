@@ -17,8 +17,8 @@ CREATEKEYBOARDEFFECT CreateKeyboardEffect;
 SETEFFECT SetEffect;
 
 #define RANDOM_BYTE()		(rand() % 255)
-#define NORMAL_COLOR    RGB(0, 82, 82)
-#define INSERT_COLOR    RGB(120, 159, 0)
+#define NORMAL_COLOR    RGB(175, 215, 0)
+#define INSERT_COLOR    RGB(232, 0, 0)
 
 void
 FillEffectWithColor(ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE &Effect, COLORREF color) {

@@ -6,3 +6,5 @@ You must build using Visual Studio 2008, this is the only way Python 3.2 will be
 Do a :version to check for python3/dyn install
 
 chroma.manifest was generated with the mt tool by extracting python.exe's manifest file
+
+Install at C:\Python32\Lib\site-packages
