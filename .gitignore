@@ -1,6 +1,6 @@
+build/
 *.exp
 *.lib
 *.obj
-*.manifest
 *.pyd
-showcase/
+
